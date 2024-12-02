@@ -120,13 +120,12 @@
       var door = document.createElement("div");
       door.className = "door"; // Klasse setzen
       door.innerText = i + 1; // Nummer des Türchens
-      door.setAttribute("data-day", (i + 1).toString()); // Attribut setzen
       calendar.appendChild(door); // Türchen hinzufügen
 
       // Klick-Event für jedes Türchen
       door.addEventListener("click", function () {
         const today = new Date().getDate(); // Aktuelles Datum
-        const doorDay = parseInt(door.getAttribute("data-day"));
+        const doorDay = parseInt(door.innerText);
 
         if (doorDay === today) {
           showPopup("Sie haben leider nichts gewonnen! Probieren Sie es morgen noch einmal.");
