@@ -114,13 +114,13 @@
   <div id="overlay"></div>
 
   <script>
-    document.onload = function() {
+    window.onload = function () {
       var calendar = document.getElementById("calendar");
       for (let i = 0; i < 24; i++) {
         var door = document.createElement("div");
-        door.class = "door";
-        door.innerText = i+1;
-        door.setAttribute("data-day") = (i+1).toString;
+        door.className = "door";
+        door.innerText = i + 1;
+        door.setAttribute("data-day", (i + 1).toString());
         calendar.appendChild(door);
       }
     }
