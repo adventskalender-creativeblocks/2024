@@ -114,41 +114,46 @@
   <div id="overlay"></div>
 
   <script>
-    window.onload = function () {
-      var calendar = document.getElementById("calendar");
-      for (let i = 0; i < 24; i++) {
-        var door = document.createElement("div");
-        door.className = "door";
-        door.innerText = i + 1;
-        door.setAttribute("data-day", (i + 1).toString());
-        calendar.appendChild(door);
-      }
-    }
-    const doors = document.querySelectorAll(".door");
-    const popup = document.getElementById("popup");
-    const overlay = document.getElementById("overlay");
-    const popupMessage = document.getElementById("popup-message");
-    const today = new Date().getDate();
+  window.onload = function () {
+    var calendar = document.getElementById("calendar");
+    for (let i = 0; i < 24; i++) {
+      var door = document.createElement("div");
+      door.className = "door"; // Klasse setzen
+      door.innerText = i + 1; // Nummer des Türchens
+      door.setAttribute("data-day", (i + 1).toString()); // Attribut setzen
+      calendar.appendChild(door); // Türchen hinzufügen
 
-    doors.forEach(door => {
-      door.addEventListener("click", () => {
+      // Klick-Event für jedes Türchen
+      door.addEventListener("click", function () {
+        const today = new Date().getDate(); // Aktuelles Datum
         const doorDay = parseInt(door.getAttribute("data-day"));
 
         if (doorDay === today) {
-          popupMessage.textContent = "Sie haben leider nichts gewonnen! Probieren Sie es morgen noch einmal.";
+          showPopup("Sie haben leider nichts gewonnen! Probieren Sie es morgen noch einmal.");
         } else {
-          popupMessage.textContent = "Dieses Türchen kann nicht geöffnet werden.";
+          showPopup("Dieses Türchen kann nicht geöffnet werden.");
         }
-
-        popup.style.display = "block";
-        overlay.style.display = "block";
       });
-    });
-
-    function closePopup() {
-      popup.style.display = "none";
-      overlay.style.display = "none";
     }
+  };
+
+  function showPopup(message) {
+    const popup = document.getElementById("popup");
+    const overlay = document.getElementById("overlay");
+    const popupMessage = document.getElementById("popup-message");
+
+    popupMessage.textContent = message;
+    popup.style.display = "block";
+    overlay.style.display = "block";
+  }
+
+  function closePopup() {
+    const popup = document.getElementById("popup");
+    const overlay = document.getElementById("overlay");
+
+    popup.style.display = "none";
+    overlay.style.display = "none";
+  }
   </script>
 </body>
 </html>
