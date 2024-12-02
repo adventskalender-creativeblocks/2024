@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Blocks Adventskalender 2024</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f9f3e4;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #b22222;
+      margin-top: 20px;
+    }
+    #video-container {
+      margin: 20px 0;
+    }
+    #calendar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .door {
+      width: 70px;
+      height: 70px;
+      background-color: #fff;
+      border: 2px solid #b22222;
+      border-radius: 10px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #b22222;
+      cursor: pointer;
+    }
+    .door:before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://via.placeholder.com/70'); /* Beispielbild */
+      background-size: cover;
+      border-radius: 10px;
+      opacity: 0.6;
+      z-index: -1;
+    }
+    .door:hover {
+      background-color: #ffcccc;
+    }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 400px;
+      background: #fff;
+      border: 2px solid #b22222;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+    #popup h2 {
+      margin: 0;
+      color: #b22222;
+    }
+    #popup button {
+      margin-top: 20px;
+      background: #b22222;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #popup button:hover {
+      background: #ff5555;
+    }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <h1>Creative Blocks Adventskalender 2024</h1>
+  <div id="video-container">
+    <video controls width="100%" src="ScreenRecording_12-01-2024 20-12-29_1.mp4"></video>
+  </div>
+  <div id="calendar">
+    <!-- Türchen -->
+    <div class="door" data-day="1">1</div>
+    <div class="door" data-day="2">2</div>
+    <div class="door" data-day="3">3</div>
+    <div class="door" data-day="4">4</div>
+    <div class="door" data-day="5">5</div>
+    <div class="door" data-day="6">6</div>
+    <div class="door" data-day="7">7</div>
+    <div class="door" data-day="8">8</div>
+    <div class="door" data-day="9">9</div>
+    <div class="door" data-day="10">10</div>
+    <div class="door" data-day="11">11</div>
+    <div class="door" data-day="12">12</div>
+    <div class="door" data-day="13">13</div>
+    <div class="door" data-day="14">14</div>
+    <div class="door" data-day="15">15</div>
+    <div class="door" data-day="16">16</div>
+    <div class="door" data-day="17">17</div>
+    <div class="door" data-day="18">18</div>
+    <div class="door" data-day="19">19</div>
+    <div class="door" data-day="20">20</div>
+    <div class="door" data-day="21">21</div>
+    <div class="door" data-day="22">22</div>
+    <div class="door" data-day="23">23</div>
+    <div class="door" data-day="24">24</div>
+  </div>
+
+  <div id="popup">
+    <h2 id="popup-message"></h2>
+    <button onclick="closePopup()">Schließen</button>
+  </div>
+  <div id="overlay"></div>
+
+  <script>
+    const doors = document.querySelectorAll(".door");
+    const popup = document.getElementById("popup");
+    const overlay = document.getElementById("overlay");
+    const popupMessage = document.getElementById("popup-message");
+    const today = new Date().getDate();
+
+    doors.forEach(door => {
+      door.addEventListener("click", () => {
+        const doorDay = parseInt(door.getAttribute("data-day"));
+
+        if (doorDay === today) {
+          popupMessage.textContent = "Sie haben leider nichts gewonnen! Probieren Sie es morgen noch einmal.";
+        } else {
+          popupMessage.textContent = "Dieses Türchen kann nicht geöffnet werden.";
+        }
+
+        popup.style.display = "block";
+        overlay.style.display = "block";
+      });
+    });
+
+    function closePopup() {
+      popup.style.display = "none";
+      overlay.style.display = "none";
+    }
+  </script>
+</body>
+</html>
