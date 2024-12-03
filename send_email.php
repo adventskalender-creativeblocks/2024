@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $to = "maurin12@bluewin.ch";
         $subject = "Neue Adventskalender-Teilnahme";
         $message = "Die folgende E-Mail-Adresse hat am Adventskalender teilgenommen:\n\n$email";
-        $headers = "From: no-reply@adventskalender2024.com";
+        $headers = "From: maurin12@bluewin.ch";
 
         if (mail($to, $subject, $message, $headers)) {
             echo "Ihre E-Mail-Adresse wurde erfolgreich übermittelt.";
