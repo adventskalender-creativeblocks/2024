@@ -52,12 +52,13 @@
     }
     #popup {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: 45%; /* Pop-up auf 45% der Breite */
       height: auto;
       background: rgba(0, 0, 0, 0.8);
-      color: white;
+      color: black; /* Schriftfarbe auf Schwarz geändert */
       display: none;
       flex-direction: column;
       justify-content: center;
@@ -67,7 +68,6 @@
       background-color: #f9f3e4; /* Gleiche Farbe wie der Seiten-Hintergrund */
       border-radius: 10px;
       margin: auto;
-      top: 20%;
     }
     #popup h2, #popup input, #popup button {
       margin: 10px 0;
@@ -95,7 +95,7 @@
 
   <div id="popup">
     <h2 id="popup-message"></h2>
-    <p id="popup-prize-message"></p> <!-- Hier wird angezeigt, was man gewinnen kann -->
+    <p id="popup-prize-message">Gewinnen Sie einen 5.- Gutschein für den Shop von Creative Blocks</p> <!-- Gewinntext -->
     <input type="email" id="email-input" placeholder="Ihre E-Mail-Adresse eingeben">
     <button onclick="submitEmail()">E-Mail absenden</button>
     <button onclick="closePopup()">Abbrechen</button>
@@ -177,3 +177,4 @@
   </script>
 </body>
 </html>
+
