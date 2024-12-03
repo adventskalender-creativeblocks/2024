@@ -6,7 +6,7 @@
   <title>Creative Blocks Adventskalender 2024</title>
   <style>
     body {
-      font-family: "Modern Love Caps", Robotic, raleway, Arial, Sans-Serif;
+      font-family: "Segoe UI", Arial, sans-serif;
       background-color: #f9f3e4;
       text-align: center;
       margin: 0;
@@ -19,163 +19,127 @@
     #video-container {
       margin: 20px 0;
     }
-    #calendar {
+    .calendar {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
+      gap: 10px;
     }
     .door {
-      width: 70px;
-      height: 70px;
-      background-color: #fff;
-      border: 2px solid #b22222;
-      border-radius: 10px;
-      position: relative;
+      width: 80px;
+      height: 80px;
+      background-color: #d3a900;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      font-weight: bold;
-      color: #b22222;
+      border: 2px solid #b8860b;
+      border-radius: 10px;
       cursor: pointer;
+      user-select: none;
     }
-    .door:hover {
-      background-color: #ffcccc;
+    .door.disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
     }
     #popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80%;
-      max-width: 400px;
-      background: #fff;
-      border: 2px solid #b22222;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-      z-index: 1000;
-    }
-    #popup h2 {
-      margin: 0;
-      color: #b22222;
-    }
-    #popup button {
-      margin-top: 20px;
-      background: #b22222;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #popup button:hover {
-      background: #ff5555;
-    }
-    #overlay {
-      display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
-    #email-form {
+    #popup h2 {
+      margin-bottom: 20px;
+    }
+    #popup button {
       margin-top: 20px;
-    }
-    #email-input {
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #b22222;
-      border-radius: 5px;
-      width: calc(100% - 22px);
-    }
-    #email-submit {
       padding: 10px 20px;
-      font-size: 16px;
       background-color: #b22222;
-      color: #fff;
+      color: white;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
-    }
-    #email-submit:hover {
-      background-color: #ff5555;
     }
   </style>
 </head>
 <body>
   <h1>Creative Blocks Adventskalender 2024</h1>
   <div id="video-container">
-    <video controls width="70%" src="ScreenRecording_12-01-2024 20-12-29_1.mp4"></video>
+    <!-- Platz für dein Video -->
+    <video src="ScreenRecording_12-01-2024 20-12-29_1.mp4" controls style="max-width: 70%;"></video>
   </div>
-  <div id="calendar">
-    <!-- JavaScript fügt hier die Türchen ein -->
-  </div>
+  <div class="calendar" id="calendar"></div>
 
   <div id="popup">
     <h2 id="popup-message"></h2>
-    <form id="email-form">
-      <input type="email" id="email-input" placeholder="Geben Sie Ihre E-Mail-Adresse ein" required>
-      <button type="submit" id="email-submit">Absenden</button>
-    </form>
     <button onclick="closePopup()">Schließen</button>
   </div>
-  <div id="overlay"></div>
 
   <script>
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth() + 1;
+
+    // Gewinne
+    const prizes = {
+      6: "Weihnachtsmann-Minifigur",
+      17: "Mini-Matterhorn mit Helikopter",
+      24: "Geschenk aus Lego-Teilen mit Überraschung",
+      default: "einen -5.- Gutschein"
+    };
+
+    // Türchen erzeugen
     const calendar = document.getElementById("calendar");
     const popup = document.getElementById("popup");
-    const overlay = document.getElementById("overlay");
     const popupMessage = document.getElementById("popup-message");
-    const emailForm = document.getElementById("email-form");
-    const emailInput = document.getElementById("email-input");
-    const today = new Date().getDate();
 
-    // Zufällige Türchen
-    const doorsArray = Array.from({ length: 24 }, (_, i) => i + 1);
-    doorsArray.sort(() => Math.random() - 0.5);
+    const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
 
-    doorsArray.forEach(day => {
+    const days = shuffleArray([...Array(24).keys()].map(i => i + 1)); // 1 bis 24 zufällig gemischt
+
+    days.forEach(day => {
       const door = document.createElement("div");
-      door.className = "door";
       door.textContent = day;
-      door.setAttribute("data-day", day);
+      door.className = "door";
+      door.onclick = () => openDoor(day, door);
+      if (currentMonth !== 12 || day > currentDay) {
+        door.classList.add("disabled");
+      }
       calendar.appendChild(door);
-
-      door.addEventListener("click", () => {
-        if (parseInt(door.getAttribute("data-day")) === today) {
-          // Zeige E-Mail-Formular für heutiges Türchen
-          popupMessage.textContent = "Geben Sie Ihre E-Mail ein, um zu erfahren, ob Sie gewonnen haben.";
-          popup.style.display = "block";
-          overlay.style.display = "block";
-
-          emailForm.onsubmit = (e) => {
-            e.preventDefault();
-            if (Math.random() < 0.001) {
-              popupMessage.textContent = "Sie haben einen -5.- Gutschein gewonnen!";
-            } else {
-              popupMessage.textContent = "Sie haben leider nichts gewonnen!";
-            }
-            emailForm.style.display = "none";
-          };
-        } else {
-          alert("Dieses Türchen kann nicht geöffnet werden.");
-        }
-      });
     });
+
+    function openDoor(day, doorElement) {
+      if (doorElement.classList.contains("disabled")) {
+        alert("Dieses Türchen kann nicht geöffnet werden.");
+        return;
+      }
+
+      const chance = Math.random();
+      const prize = prizes[day] || prizes.default;
+
+      if (chance < 0.001) {
+        popupMessage.textContent = `Herzlichen Glückwunsch! Sie haben ${prize} gewonnen!`;
+      } else {
+        popupMessage.textContent = "Sie haben leider nichts gewonnen. Probieren Sie es morgen noch einmal.";
+      }
+
+      popup.style.display = "flex";
+      doorElement.classList.add("disabled");
+    }
 
     function closePopup() {
       popup.style.display = "none";
-      overlay.style.display = "none";
-      emailForm.style.display = "block"; // Zurücksetzen des Formulars
-      emailInput.value = ""; // Leeren des Eingabefeldes
     }
   </script>
 </body>
