@@ -19,6 +19,10 @@
     #video-container {
       margin: 20px 0;
     }
+    video {
+      width: 70%; /* Video auf 70% der Breite */
+      max-width: 100%;
+    }
     .calendar {
       display: flex;
       flex-wrap: wrap;
@@ -50,8 +54,8 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 45%; /* Pop-up auf 45% der Breite */
+      height: auto;
       background: rgba(0, 0, 0, 0.8);
       color: white;
       display: none;
@@ -61,6 +65,9 @@
       text-align: center;
       padding: 20px;
       background-color: #f9f3e4; /* Gleiche Farbe wie der Seiten-Hintergrund */
+      border-radius: 10px;
+      margin: auto;
+      top: 20%;
     }
     #popup h2, #popup input, #popup button {
       margin: 10px 0;
@@ -82,7 +89,7 @@
 <body>
   <h1>Creative Blocks Adventskalender 2024</h1>
   <div id="video-container">
-    <video src="ScreenRecording_12-01-2024 20-12-29_1.mp4" controls style="max-width: 100%;"></video>
+    <video src="ScreenRecording_12-01-2024 20-12-29_1.mp4" controls></video>
   </div>
   <div class="calendar" id="calendar"></div>
 
@@ -114,8 +121,7 @@
 
     let selectedDay = null;
 
-    const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
-    const days = shuffleArray([...Array(24).keys()].map(i => i + 1));
+    const days = [...Array(24).keys()].map(i => i + 1);
 
     days.forEach(day => {
       const door = document.createElement("div");
@@ -123,8 +129,8 @@
       door.className = "door";
       door.onclick = () => handleDoorClick(day, door);
 
-      if ((currentMonth !== 12 || day > currentDay)) {
-        door.classList.add("disabled"); // Gesperrte Türchen für vergangene Tage
+      if (day !== currentDay) {
+        door.classList.add("disabled"); // Nur das heutige Türchen ist aktiv
       }
       calendar.appendChild(door);
     });
