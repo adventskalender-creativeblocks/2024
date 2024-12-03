@@ -6,7 +6,7 @@
   <title>Creative Blocks Adventskalender 2024</title>
   <style>
     body {
-      font-family: "Segoe UI", "Aptos", sans-serif;
+      font-family: "Segoe UI", sans-serif;
       background-color: #f9f3e4;
       text-align: center;
       margin: 0;
@@ -41,17 +41,6 @@
       font-weight: bold;
       color: #b22222;
       cursor: pointer;
-    }
-    .door:before {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-image: url('https://via.placeholder.com/70'); /* Beispielbild */
-      background-size: cover;
-      border-radius: 10px;
-      opacity: 0.6;
-      z-index: -1;
     }
     .door:hover {
       background-color: #ffcccc;
@@ -98,13 +87,14 @@
       z-index: 999;
     }
     #email-form {
-      margin: 20px 0;
+      margin-top: 20px;
     }
     #email-input {
       padding: 10px;
       font-size: 16px;
       border: 2px solid #b22222;
       border-radius: 5px;
+      width: calc(100% - 22px);
     }
     #email-submit {
       padding: 10px 20px;
@@ -123,19 +113,18 @@
 <body>
   <h1>Creative Blocks Adventskalender 2024</h1>
   <div id="video-container">
-    <video controls width="70%" src="ScreenRecording_12-01-2024 20-12-29_1.mp4"></video>
+    <video controls width="100%" src="ScreenRecording_12-01-2024 20-12-29_1.mp4"></video>
   </div>
-  <form id="email-form">
-    <input type="email" id="email-input" placeholder="Geben Sie Ihre E-Mail-Adresse ein" required>
-    <button type="button" id="email-submit">Teilnehmen</button>
-  </form>
-  <div id="calendar" style="display: none;">
-    <!-- Türchen -->
-    <!-- JavaScript fügt hier die Türchen zufällig an -->
+  <div id="calendar">
+    <!-- JavaScript fügt hier die Türchen ein -->
   </div>
 
   <div id="popup">
     <h2 id="popup-message"></h2>
+    <form id="email-form">
+      <input type="email" id="email-input" placeholder="Geben Sie Ihre E-Mail-Adresse ein" required>
+      <button type="submit" id="email-submit">Absenden</button>
+    </form>
     <button onclick="closePopup()">Schließen</button>
   </div>
   <div id="overlay"></div>
@@ -147,20 +136,11 @@
     const popupMessage = document.getElementById("popup-message");
     const emailForm = document.getElementById("email-form");
     const emailInput = document.getElementById("email-input");
-    const emailSubmit = document.getElementById("email-submit");
     const today = new Date().getDate();
 
+    // Zufällige Türchen
     const doorsArray = Array.from({ length: 24 }, (_, i) => i + 1);
-    doorsArray.sort(() => Math.random() - 0.5); // Zufällige Reihenfolge
-
-    emailSubmit.addEventListener("click", () => {
-      if (emailInput.value) {
-        emailForm.style.display = "none";
-        calendar.style.display = "flex";
-      } else {
-        alert("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
-      }
-    });
+    doorsArray.sort(() => Math.random() - 0.5);
 
     doorsArray.forEach(day => {
       const door = document.createElement("div");
@@ -171,23 +151,31 @@
 
       door.addEventListener("click", () => {
         if (parseInt(door.getAttribute("data-day")) === today) {
-          // 0.1 % Chance für Gewinn
-          if (Math.random() < 0.001) {
-            popupMessage.textContent = "Sie haben einen -5.- Gutschein gewonnen!";
-          } else {
-            popupMessage.textContent = "Sie haben leider nichts gewonnen! Probieren Sie es morgen noch einmal.";
-          }
+          // Zeige E-Mail-Formular für heutiges Türchen
+          popupMessage.textContent = "Geben Sie Ihre E-Mail ein, um zu erfahren, ob Sie gewonnen haben.";
+          popup.style.display = "block";
+          overlay.style.display = "block";
+
+          emailForm.onsubmit = (e) => {
+            e.preventDefault();
+            if (Math.random() < 0.001) {
+              popupMessage.textContent = "Sie haben einen -5.- Gutschein gewonnen!";
+            } else {
+              popupMessage.textContent = "Sie haben leider nichts gewonnen!";
+            }
+            emailForm.style.display = "none";
+          };
         } else {
-          popupMessage.textContent = "Dieses Türchen kann nicht geöffnet werden.";
+          alert("Dieses Türchen kann nicht geöffnet werden.");
         }
-        popup.style.display = "block";
-        overlay.style.display = "block";
       });
     });
 
     function closePopup() {
       popup.style.display = "none";
       overlay.style.display = "none";
+      emailForm.style.display = "block"; // Zurücksetzen des Formulars
+      emailInput.value = ""; // Leeren des Eingabefeldes
     }
   </script>
 </body>
