@@ -17,8 +17,7 @@
       margin-top: 20px;
     }
     #video-container {
-      margin: 20px 0; 
-      align-items: center;
+      margin: 20px 0;
     }
     #calendar {
       display: flex;
@@ -98,14 +97,42 @@
       background: rgba(0, 0, 0, 0.5);
       z-index: 999;
     }
+    #email-form {
+      margin: 20px 0;
+    }
+    #email-input {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #b22222;
+      border-radius: 5px;
+    }
+    #email-submit {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #b22222;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #email-submit:hover {
+      background-color: #ff5555;
+    }
   </style>
 </head>
 <body>
   <h1>Creative Blocks Adventskalender 2024</h1>
   <div id="video-container">
-    <video controls width="70%" src="ScreenRecording_12-01-2024 20-12-29_1.mp4"></video>
+    <video controls width="100%" src="ScreenRecording_12-01-2024 20-12-29_1.mp4"></video>
   </div>
-  <div id="calendar"></div>
+  <form id="email-form">
+    <input type="email" id="email-input" placeholder="Geben Sie Ihre E-Mail-Adresse ein" required>
+    <button type="button" id="email-submit">Teilnehmen</button>
+  </form>
+  <div id="calendar" style="display: none;">
+    <!-- Türchen -->
+    <!-- JavaScript fügt hier die Türchen zufällig an -->
+  </div>
 
   <div id="popup">
     <h2 id="popup-message"></h2>
@@ -114,45 +141,54 @@
   <div id="overlay"></div>
 
   <script>
-  window.onload = function () {
-    var calendar = document.getElementById("calendar");
-    for (let i = 0; i < 24; i++) {
-      var door = document.createElement("div");
-      door.className = "door"; // Klasse setzen
-      door.innerText = i + 1; // Nummer des Türchens
-      calendar.appendChild(door); // Türchen hinzufügen
-
-      // Klick-Event für jedes Türchen
-      door.addEventListener("click", function () {
-        const today = new Date().getDate(); // Aktuelles Datum
-        const doorDay = parseInt(door.innerText);
-
-        if (doorDay == today) {
-          showPopup("Sie haben leider nichts gewonnen! Probieren Sie es morgen noch einmal.");
-        } else {
-          showPopup("Dieses Türchen kann nicht geöffnet werden.");
-        }
-      });
-    }
-  };
-
-  function showPopup(message) {
+    const calendar = document.getElementById("calendar");
     const popup = document.getElementById("popup");
     const overlay = document.getElementById("overlay");
     const popupMessage = document.getElementById("popup-message");
+    const emailForm = document.getElementById("email-form");
+    const emailInput = document.getElementById("email-input");
+    const emailSubmit = document.getElementById("email-submit");
+    const today = new Date().getDate();
 
-    popupMessage.textContent = message;
-    popup.style.display = "block";
-    overlay.style.display = "block";
-  }
+    const doorsArray = Array.from({ length: 24 }, (_, i) => i + 1);
+    doorsArray.sort(() => Math.random() - 0.5); // Zufällige Reihenfolge
 
-  function closePopup() {
-    const popup = document.getElementById("popup");
-    const overlay = document.getElementById("overlay");
+    emailSubmit.addEventListener("click", () => {
+      if (emailInput.value) {
+        emailForm.style.display = "none";
+        calendar.style.display = "flex";
+      } else {
+        alert("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+      }
+    });
 
-    popup.style.display = "none";
-    overlay.style.display = "none";
-  }
+    doorsArray.forEach(day => {
+      const door = document.createElement("div");
+      door.className = "door";
+      door.textContent = day;
+      door.setAttribute("data-day", day);
+      calendar.appendChild(door);
+
+      door.addEventListener("click", () => {
+        if (parseInt(door.getAttribute("data-day")) === today) {
+          // 0.1 % Chance für Gewinn
+          if (Math.random() < 0.001) {
+            popupMessage.textContent = "Sie haben einen -5.- Gutschein gewonnen!";
+          } else {
+            popupMessage.textContent = "Sie haben leider nichts gewonnen! Probieren Sie es morgen noch einmal.";
+          }
+        } else {
+          popupMessage.textContent = "Dieses Türchen kann nicht geöffnet werden.";
+        }
+        popup.style.display = "block";
+        overlay.style.display = "block";
+      });
+    });
+
+    function closePopup() {
+      popup.style.display = "none";
+      overlay.style.display = "none";
+    }
   </script>
 </body>
 </html>
