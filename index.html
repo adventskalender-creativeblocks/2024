@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
-      background-color: #f9f3e4;
+      background-color: #f9f3e4; /* Heller Hintergrund */
       text-align: center;
       margin: 0;
       padding: 0;
@@ -60,6 +60,7 @@
       align-items: center;
       text-align: center;
       padding: 20px;
+      background-color: #f9f3e4; /* Gleiche Farbe wie der Seiten-Hintergrund */
     }
     #popup h2, #popup input, #popup button {
       margin: 10px 0;
@@ -87,6 +88,7 @@
 
   <div id="popup">
     <h2 id="popup-message"></h2>
+    <p id="popup-prize-message"></p> <!-- Hier wird angezeigt, was man gewinnen kann -->
     <input type="email" id="email-input" placeholder="Ihre E-Mail-Adresse eingeben">
     <button onclick="submitEmail()">E-Mail absenden</button>
     <button onclick="closePopup()">Abbrechen</button>
@@ -107,6 +109,7 @@
     const calendar = document.getElementById("calendar");
     const popup = document.getElementById("popup");
     const popupMessage = document.getElementById("popup-message");
+    const popupPrizeMessage = document.getElementById("popup-prize-message");
     const emailInput = document.getElementById("email-input");
 
     let selectedDay = null;
@@ -119,8 +122,9 @@
       door.textContent = day;
       door.className = "door";
       door.onclick = () => handleDoorClick(day, door);
-      if (currentMonth !== 12 || day > currentDay) {
-        door.classList.add("disabled");
+
+      if ((currentMonth !== 12 || day > currentDay)) {
+        door.classList.add("disabled"); // Gesperrte Türchen für vergangene Tage
       }
       calendar.appendChild(door);
     });
@@ -130,8 +134,10 @@
         alert("Dieses Türchen kann nicht geöffnet werden.");
         return;
       }
+
       selectedDay = day;
       popupMessage.textContent = "Bitte geben Sie Ihre E-Mail-Adresse ein, um teilzunehmen!";
+      popupPrizeMessage.textContent = prizes[selectedDay] || prizes.default; // Gewinnanzeige für das spezifische Türchen
       popup.style.display = "flex";
     }
 
