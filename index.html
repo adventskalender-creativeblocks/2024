@@ -95,7 +95,7 @@
 
   <div id="popup">
     <h2 id="popup-message"></h2>
-    <p id="popup-prize-message">Gewinnen Sie einen 5.- Gutschein für den Shop von Creative Blocks</p> <!-- Gewinntext -->
+    <p id="popup-prize-message">Sie haben einen CHF 5 Franken Gutschein für den Shop von Creative Blocks gewonnen!</p> <!-- Gewinntext -->
     <input type="email" id="email-input" placeholder="Ihre E-Mail-Adresse eingeben">
     <button onclick="submitEmail()">E-Mail absenden</button>
     <button onclick="closePopup()">Abbrechen</button>
@@ -107,10 +107,10 @@
     const currentMonth = today.getMonth() + 1;
 
     const prizes = {
-      6: "eine Weihnachtsmann-Minifigur",
-      17: "ein Mini-Matterhorn mit Helikopter",
-      24: "ein Geschenk aus Lego-Teilen mit Überraschung",
-      default: "einen -5.- Gutschein"
+      6: "Gewinnen Sie eine Weihnachtsmann-Minifigur!",
+      17: "Gewinnen Sie ein Mini-Matterhorn mit Helikopter!",
+      24: "Gewinnen Sie ein Geschenk aus Lego-Steinen mit Überraschung darin!",
+      default: "Gewinnen Sie einen 5.- Gutschein für den Shop von Creative Blocks!"
     };
 
     const calendar = document.getElementById("calendar");
