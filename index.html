@@ -6,7 +6,7 @@
   <title>Creative Blocks Adventskalender 2024</title>
   <style>
     body {
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: "Segoe UI", sans-serif;
       background-color: #f9f3e4;
       text-align: center;
       margin: 0;
@@ -59,12 +59,17 @@
       justify-content: center;
       align-items: center;
       text-align: center;
+      padding: 20px;
     }
-    #popup h2 {
-      margin-bottom: 20px;
+    #popup h2, #popup input, #popup button {
+      margin: 10px 0;
+    }
+    #popup input {
+      padding: 10px;
+      font-size: 1rem;
+      width: 80%;
     }
     #popup button {
-      margin-top: 20px;
       padding: 10px 20px;
       background-color: #b22222;
       color: white;
@@ -76,14 +81,15 @@
 <body>
   <h1>Creative Blocks Adventskalender 2024</h1>
   <div id="video-container">
-    <!-- Platz für dein Video -->
-    <video src="ScreenRecording_12-01-2024 20-12-29_1.mp4" controls style="max-width: 70%;"></video>
+    <video src="ScreenRecording_12-01-2024 20-12-29_1.mp4" controls style="max-width: 100%;"></video>
   </div>
   <div class="calendar" id="calendar"></div>
 
   <div id="popup">
     <h2 id="popup-message"></h2>
-    <button onclick="closePopup()">Schließen</button>
+    <input type="email" id="email-input" placeholder="Ihre E-Mail-Adresse eingeben">
+    <button onclick="submitEmail()">E-Mail absenden</button>
+    <button onclick="closePopup()">Abbrechen</button>
   </div>
 
   <script>
@@ -91,42 +97,53 @@
     const currentDay = today.getDate();
     const currentMonth = today.getMonth() + 1;
 
-    // Gewinne
     const prizes = {
-      6: "Weihnachtsmann-Minifigur",
-      17: "Mini-Matterhorn mit Helikopter",
-      24: "Geschenk aus Lego-Teilen mit Überraschung",
+      6: "eine Weihnachtsmann-Minifigur",
+      17: "ein Mini-Matterhorn mit Helikopter",
+      24: "ein Geschenk aus Lego-Teilen mit Überraschung",
       default: "einen -5.- Gutschein"
     };
 
-    // Türchen erzeugen
     const calendar = document.getElementById("calendar");
     const popup = document.getElementById("popup");
     const popupMessage = document.getElementById("popup-message");
+    const emailInput = document.getElementById("email-input");
+
+    let selectedDay = null;
 
     const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
-
-    const days = shuffleArray([...Array(24).keys()].map(i => i + 1)); // 1 bis 24 zufällig gemischt
+    const days = shuffleArray([...Array(24).keys()].map(i => i + 1));
 
     days.forEach(day => {
       const door = document.createElement("div");
       door.textContent = day;
       door.className = "door";
-      door.onclick = () => openDoor(day, door);
+      door.onclick = () => handleDoorClick(day, door);
       if (currentMonth !== 12 || day > currentDay) {
         door.classList.add("disabled");
       }
       calendar.appendChild(door);
     });
 
-    function openDoor(day, doorElement) {
+    function handleDoorClick(day, doorElement) {
       if (doorElement.classList.contains("disabled")) {
         alert("Dieses Türchen kann nicht geöffnet werden.");
         return;
       }
+      selectedDay = day;
+      popupMessage.textContent = "Bitte geben Sie Ihre E-Mail-Adresse ein, um teilzunehmen!";
+      popup.style.display = "flex";
+    }
+
+    function submitEmail() {
+      const email = emailInput.value.trim();
+      if (!email || !validateEmail(email)) {
+        alert("Bitte eine gültige E-Mail-Adresse eingeben.");
+        return;
+      }
 
       const chance = Math.random();
-      const prize = prizes[day] || prizes.default;
+      const prize = prizes[selectedDay] || prizes.default;
 
       if (chance < 0.001) {
         popupMessage.textContent = `Herzlichen Glückwunsch! Sie haben ${prize} gewonnen!`;
@@ -134,12 +151,16 @@
         popupMessage.textContent = "Sie haben leider nichts gewonnen. Probieren Sie es morgen noch einmal.";
       }
 
-      popup.style.display = "flex";
-      doorElement.classList.add("disabled");
+      emailInput.value = ""; // Reset email input
     }
 
     function closePopup() {
       popup.style.display = "none";
+    }
+
+    function validateEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
     }
   </script>
 </body>
