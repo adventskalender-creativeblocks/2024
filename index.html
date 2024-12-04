@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
-      background-color: #f9f3e4; /* Heller Hintergrund */
+      background-color: #f9f3e4;
       text-align: center;
       margin: 0;
       padding: 0;
@@ -20,7 +20,7 @@
       margin: 20px 0;
     }
     video {
-      width: 70%; /* Video auf 70% der Breite */
+      width: 70%;
       max-width: 100%;
     }
     .calendar {
@@ -55,27 +55,19 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 45%; /* Pop-up auf 45% der Breite */
-      height: auto;
-      background: rgba(0, 0, 0, 0.8);
-      color: black; /* Schriftfarbe auf Schwarz geändert */
+      width: 45%;
+      background: #f9f3e4;
+      color: black;
       display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       padding: 20px;
-      background-color: #f9f3e4; /* Gleiche Farbe wie der Seiten-Hintergrund */
       border-radius: 10px;
-      margin: auto;
     }
-    #popup h2, #popup input, #popup button {
+    #popup h2, #popup button {
       margin: 10px 0;
-    }
-    #popup input {
-      padding: 10px;
-      font-size: 1rem;
-      width: 80%;
     }
     #popup button {
       padding: 10px 20px;
@@ -94,11 +86,8 @@
   <div class="calendar" id="calendar"></div>
 
   <div id="popup">
-    <h2 id="popup-message"></h2>
-    <p id="popup-prize-message">Sie haben einen CHF 5 Franken Gutschein für den Shop von Creative Blocks gewonnen!</p> <!-- Gewinntext -->
-    <input type="email" id="email-input" placeholder="Ihre E-Mail-Adresse eingeben">
-    <button onclick="submitEmail()">E-Mail absenden</button>
-    <button onclick="closePopup()">Abbrechen</button>
+    <h2 id="popup-prize"></h2>
+    <button id="mail-button" onclick="sendMail()">Jetzt teilnehmen</button>
   </div>
 
   <script>
@@ -107,19 +96,15 @@
     const currentMonth = today.getMonth() + 1;
 
     const prizes = {
-      6: "Gewinnen Sie eine Weihnachtsmann-Minifigur!",
-      17: "Gewinnen Sie ein Mini-Matterhorn mit Helikopter!",
-      24: "Gewinnen Sie ein Geschenk aus Lego-Steinen mit Überraschung darin!",
-      default: "Gewinnen Sie einen 5.- Gutschein für den Shop von Creative Blocks!"
+      6: "eine Weihnachtsmann-Minifigur",
+      17: "ein Mini-Matterhorn mit Helikopter",
+      24: "ein Geschenk aus Lego-Teilen mit Überraschung",
+      default: "einen -5.- Gutschein"
     };
 
     const calendar = document.getElementById("calendar");
     const popup = document.getElementById("popup");
-    const popupMessage = document.getElementById("popup-message");
-    const popupPrizeMessage = document.getElementById("popup-prize-message");
-    const emailInput = document.getElementById("email-input");
-
-    let selectedDay = null;
+    const popupPrize = document.getElementById("popup-prize");
 
     const days = [...Array(24).keys()].map(i => i + 1);
 
@@ -141,40 +126,30 @@
         return;
       }
 
-      selectedDay = day;
-      popupMessage.textContent = "Bitte geben Sie Ihre E-Mail-Adresse ein, um teilzunehmen!";
-      popupPrizeMessage.textContent = prizes[selectedDay] || prizes.default; // Gewinnanzeige für das spezifische Türchen
+      const prize = prizes[day] || prizes.default;
+      popupPrize.textContent = `Gewinnen Sie ${prize}!`;
       popup.style.display = "flex";
     }
 
-    function submitEmail() {
-      const email = emailInput.value.trim();
-      if (!email || !validateEmail(email)) {
-        alert("Bitte eine gültige E-Mail-Adresse eingeben.");
-        return;
-      }
+    function sendMail() {
+      const mailto = "mailto:maurin12@bluewin.ch";
+      const subject = encodeURIComponent("Creative Blocks Adventskalender 2024");
+      const body = encodeURIComponent("Ich möchte gerne am Gewinnspiel von Creative Blocks teilnehmen.");
+      window.location.href = `${mailto}?subject=${subject}&body=${body}`;
 
-      const chance = Math.random();
-      const prize = prizes[selectedDay] || prizes.default;
+      // Simuliert die Anzeige nach dem Mailversand
+      setTimeout(() => {
+        const chance = Math.random();
+        const prize = prizes[currentDay] || prizes.default;
 
-      if (chance < 0.001) {
-        popupMessage.textContent = `Herzlichen Glückwunsch! Sie haben ${prize} gewonnen!`;
-      } else {
-        popupMessage.textContent = "Sie haben leider nichts gewonnen. Probieren Sie es morgen noch einmal.";
-      }
-
-      emailInput.value = ""; // Reset email input
-    }
-
-    function closePopup() {
-      popup.style.display = "none";
-    }
-
-    function validateEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
+        if (chance < 0.02) {
+          popupPrize.textContent = `Herzlichen Glückwunsch! Sie haben ${prize} gewonnen!`;
+        } else {
+          popupPrize.textContent = "Sie haben leider nichts gewonnen. Probieren Sie es morgen noch einmal.";
+        }
+        document.getElementById("mail-button").style.display = "none"; // Mail-Button ausblenden
+      }, 2000);
     }
   </script>
 </body>
 </html>
-
